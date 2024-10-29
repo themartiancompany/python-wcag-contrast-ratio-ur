@@ -1,33 +1,85 @@
+# SPDX-License-Identifier: AGPL-3.0
+#
+# Maintainer: Pellegrino Prevete <pellegrinoprevete@gmail.com>
+# Maintainer: Truocolo <truocolo@aol.com>
 # Maintainer: Evangelos Foutras <evangelos@foutrelis.com>
 
-_name=wcag-contrast-ratio
-pkgname=python-$_name
+_py="python"
+_pkg=wcag-contrast-ratio
+_pyver="$( \
+  "${_py}" \
+    -V | \
+    awk \
+      '{print $2}')"
+_pymajver="${_pyver%.*}"
+_pyminver="${_pymajver#*.}"
+_pynextver="${_pymajver%.*}.$(( \
+  ${_pyminver} + 1))"
+pkgname="${_py}-${_pkg}"
 pkgver=0.9
 pkgrel=4
-pkgdesc="Library for computing contrast ratios, as required by WCAG 2.0"
-arch=('any')
-url="https://github.com/gsnedders/wcag-contrast-ratio"
-license=('MIT')
-depends=('python')
-makedepends=('python-setuptools')
-checkdepends=('python-pytest' 'python-hypothesis')
-source=(https://github.com/gsnedders/wcag-contrast-ratio/archive/$pkgver/$pkgname-$pkgver.tar.gz)
-sha256sums=('5263b7b2d0f5a8de2eb409421284947df6229b67bca0055fa10da38153835815')
+pkgdesc=(
+  "Library for computing contrast ratios,"
+  "as required by WCAG 2.0"
+)
+pkgdesc="${_pkgdesc[*]}"
+arch=(
+  'any'
+)
+_http="https://github.com"
+_ns="gsnedders"
+url="${_http}/${_ns}/${_pkg}"
+license=(
+  'MIT'
+)
+depends=(
+  'python'
+  "${_py}>=${_pymajver}"
+  "${_py}<${_pynextver}"
+)
+makedepends=(
+  "${_py}-setuptools"
+)
+checkdepends=(
+  "${_py}-pytest"
+  "${_py}-hypothesis"
+)
+source=(
+  "${url}/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+)
+sha256sums=(
+  '5263b7b2d0f5a8de2eb409421284947df6229b67bca0055fa10da38153835815'
+)
 
 build() {
-  cd $_name-$pkgver
-  python setup.py build
+  cd \
+    "${_pkg}-${pkgver}"
+  "${_py}" \
+    setup.py \
+      build
 }
 
 check() {
-  cd $_name-$pkgver
-  pytest test.py
+  cd \
+    "${_pkg}-${pkgver}"
+  pytest \
+    test.py
 }
 
 package() {
-  cd $_name-$pkgver
-  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
-  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+  cd \
+    "${_pkg}-${pkgver}"
+  "${_py}" \
+    setup.py \
+      install \
+        --root="${pkgdir}" \
+        --optimize=1 \
+        --skip-build
+  install \
+    -Dm644 \
+    -t \
+    "${pkgdir}/usr/share/licenses/${pkgname}" \
+    LICENSE
 }
 
 # vim:set ts=2 sw=2 et:
