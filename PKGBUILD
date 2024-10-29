@@ -18,7 +18,7 @@ _pynextver="${_pymajver%.*}.$(( \
 pkgname="${_py}-${_pkg}"
 pkgver=0.9
 pkgrel=4
-pkgdesc=(
+_pkgdesc=(
   "Library for computing contrast ratios,"
   "as required by WCAG 2.0"
 )
